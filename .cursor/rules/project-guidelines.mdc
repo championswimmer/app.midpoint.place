@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Project Basic Guidelines 
+
+- We are using `bun`, not `npm`
+- Vue 3 web framework
+- All code is in TypeScript, even inside .vue files `<script>`
+- All Vue components are written in `<script setup lang="ts">` format
+- Using Bootstrap 5 as UI library via the `bootstrap-vue-next` plugin
+- Using icons from Lucide via `lucide-vue-next` plugin
