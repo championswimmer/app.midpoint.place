@@ -9,11 +9,16 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+// Add our CSS
+import './assets/main.css'
+
+
 const app = createApp(App)
 
-app.use(createBootstrap())
 app.use(createPinia())
 app.use(router)
+app.use(createBootstrap())
+
 
 
 app.mount('#app')

@@ -10,10 +10,10 @@ import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 export default defineConfig({
   plugins: [
     vue(),
+    vueDevTools(),
     Components({
       resolvers: [BootstrapVueNextResolver()],
     }),
-    vueDevTools(),
   ],
   resolve: {
     alias: {
