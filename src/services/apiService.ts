@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
+import { useErrorStore } from '@/stores/error';
 
 // region: DTOs - Based on OpenAPI #/definitions
 // Basic Error Response
@@ -136,6 +137,19 @@ class ApiService {
         'Content-Type': 'application/json'
       }
     });
+
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const errorStore = useErrorStore();
+        if (error.response && error.response.data && error.response.data.message) {
+          errorStore.setError(error.response.data.message);
+        } else if (error.message) {
+          errorStore.setError(error.message);
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   public updateAuthToken(token: string) {

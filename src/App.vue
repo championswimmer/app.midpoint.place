@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import ErrorToast from './components/ErrorToast.vue'
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import NavBar from './components/NavBar.vue'
     <main class="flex-shrink-0 mb-4">
       <RouterView />
     </main>
+    <ErrorToast />
   </div>
 </template>
 

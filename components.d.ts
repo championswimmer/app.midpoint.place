@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ErrorToast: typeof import('./src/components/ErrorToast.vue')['default']
     GroupCard: typeof import('./src/components/GroupCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
