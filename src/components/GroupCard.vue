@@ -31,7 +31,7 @@ const groupTypeIcon = (type: string) => {
         <User :size="16" class="me-1" /> Creator: {{ group.creator.username }}
       </p>
       <p class="card-text">
-        <Users :size="16" class="me-1" /> Members: {{ group.members ? group.members.length : 1 }}
+        <Users :size="16" class="me-1" /> Members: {{ group.member_count ?? 0 }}
       </p>
       <p class="card-text">
         <component :is="groupTypeIcon(group.type)" :size="16" class="me-1" /> Type: {{ group.type }}

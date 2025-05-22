@@ -65,6 +65,7 @@ export interface GroupResponse {
   code: string;
   creator: GroupCreator;
   id: string;
+  member_count: number;
   members: GroupUserResponse[];
   midpoint_latitude: number;
   midpoint_longitude: number;
