@@ -97,12 +97,12 @@ interface Location {
   longitude: number;
 }
 
-interface LoginUserRequest {
+export interface LoginUserRequest {
   username?: string;
   password?: string;
 }
 
-interface UserResponse {
+export interface UserResponse {
   id: number;
   location?: Location;
   token?: string;
