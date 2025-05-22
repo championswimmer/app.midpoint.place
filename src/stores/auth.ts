@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import apiService, { type UserResponse, type LoginUserRequest } from '@/services/apiService';
+import apiService, { type UserResponse, type LoginUserRequest, type CreateUserRequest } from '@/services/apiService';
 import router from '@/router';
 import { AxiosError } from 'axios';
 
@@ -49,6 +49,35 @@ export const useAuthStore = defineStore('auth', {
           this.error = err.message;
         } else {
           this.error = 'An unknown error occurred during login.';
+        }
+        this.token = null;
+        this.user = null;
+        localStorage.removeItem('authToken');
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async register(registerData: CreateUserRequest) {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const response = await apiService.registerUser(registerData);
+        if (response.token && response.id) {
+          this.token = response.token;
+          this.user = response;
+          apiService.updateAuthToken(response.token);
+          localStorage.setItem('authToken', response.token);
+          router.push('/'); // Redirect to home or dashboard after registration
+        } else {
+          throw new Error('Registration failed: No token or user ID received.');
+        }
+      } catch (err) {
+        if (err instanceof AxiosError && err.response?.data?.message) {
+          this.error = err.response.data.message;
+        } else if (err instanceof Error) {
+          this.error = err.message;
+        } else {
+          this.error = 'An unknown error occurred during registration.';
         }
         this.token = null;
         this.user = null;

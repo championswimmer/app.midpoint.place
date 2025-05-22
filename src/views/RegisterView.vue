@@ -1,7 +1,7 @@
 <template>
-  <div class="login-view">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
+  <div class="register-view">
+    <h1>Register</h1>
+    <form @submit.prevent="handleRegister">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" id="username" v-model="username" required>
@@ -13,14 +13,14 @@
       <button type="submit" class="btn btn-primary" :disabled="auth.isAuthLoading">
         <span v-if="auth.isAuthLoading" class="spinner-border spinner-border-sm" role="status"
           aria-hidden="true"></span>
-        Login
+        Register
       </button>
       <div v-if="auth.authError" class="alert alert-danger mt-3" role="alert">
         {{ auth.authError }}
       </div>
     </form>
     <p class="mt-3">
-      Don't have an account? <router-link to="/register">Register</router-link>
+      Already have an account? <router-link to="/login">Login</router-link>
     </p>
   </div>
 </template>
@@ -33,13 +33,13 @@ const username = ref('');
 const password = ref('');
 const auth = useAuthStore();
 
-const handleLogin = async () => {
-  await auth.login({ username: username.value, password: password.value });
+const handleRegister = async () => {
+  await auth.register({ username: username.value, password: password.value });
 };
 </script>
 
 <style scoped>
-.login-view {
+.register-view {
   display: flex;
   flex-direction: column;
   align-items: center;

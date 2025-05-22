@@ -87,7 +87,7 @@ interface GroupUserJoinRequest {
 }
 
 // User DTOs
-interface CreateUserRequest {
+export interface CreateUserRequest {
   username?: string;
   password?: string;
 }
