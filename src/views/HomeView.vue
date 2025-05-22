@@ -4,6 +4,7 @@ import apiService, { type GroupResponse } from '../services/apiService';
 import GroupCard from '../components/GroupCard.vue';
 import { BTabs, BTab } from 'bootstrap-vue-next';
 import { useAuthStore } from '../stores/auth';
+import { useLocationStore } from '@/stores/locationStore';
 import { RouterLink } from 'vue-router';
 
 const allGroups = ref<GroupResponse[]>([]);
@@ -13,6 +14,7 @@ const isLoading = ref(true);
 const error = ref<string | null>(null);
 
 const authStore = useAuthStore();
+const locationStore = useLocationStore();
 
 interface AnimatedWord {
   text: string;
@@ -33,6 +35,10 @@ const animatedWord = ref<AnimatedWord>(wordsToAnimate[0]);
 
 onMounted(async () => {
   await authStore.fetchUser();
+
+  if (authStore.user && (!authStore.user.location || (authStore.user.location.latitude === 0 && authStore.user.location.longitude === 0))) {
+    locationStore.openLocationUpdateModal();
+  }
 
   setInterval(() => {
     currentWordIndex.value = (currentWordIndex.value + 1) % wordsToAnimate.length;

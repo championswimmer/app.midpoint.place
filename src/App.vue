@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 import ErrorToast from './components/ErrorToast.vue'
+import LocationUpdateModal from './views/LocationUpdateModal.vue'
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import ErrorToast from './components/ErrorToast.vue'
       <RouterView />
     </main>
     <ErrorToast />
+    <LocationUpdateModal />
   </div>
 </template>
 

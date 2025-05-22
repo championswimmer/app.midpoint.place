@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { BNavbar, BNavbarBrand, BNavbarNav, BNavItem, BCollapse } from 'bootstrap-vue-next'
-import { LocateFixed, MapPinned, LogIn, UserPlus, User, LogOut } from 'lucide-vue-next'
+import { LocateFixed, MapPinned, LogIn, UserPlus, User, LogOut, MapPin } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth' // Import the auth store
+import { useLocationStore } from '@/stores/locationStore' // Import location store
 import { storeToRefs } from 'pinia' // Import storeToRefs for reactive access to getters
 
 const authStore = useAuthStore()
+const locationStore = useLocationStore() // Get location store instance
 const { isAuthenticated, currentUser } = storeToRefs(authStore) // Use storeToRefs for reactive getters
 
 const handleLogout = () => {
   authStore.logout()
+}
+
+const openLocationModal = () => {
+  locationStore.openLocationUpdateModal()
 }
 </script>
 
@@ -45,6 +51,12 @@ const handleLogout = () => {
               <User class="me-1" :size="18" />
               {{ currentUser.username }}
             </span>
+          </BNavItem>
+          <BNavItem>
+            <a href="#" @click.prevent="openLocationModal" class="nav-link d-flex align-items-center">
+              <MapPin class="me-1" :size="18" />
+              Update Location
+            </a>
           </BNavItem>
           <BNavItem>
             <a href="#" @click.prevent="handleLogout" class="nav-link d-flex align-items-center">

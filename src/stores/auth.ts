@@ -93,6 +93,11 @@ export const useAuthStore = defineStore('auth', {
       apiService.updateAuthToken(''); // Clear token in apiService
       router.push('/login');
     },
+    updateUserLocation(location: { latitude: number; longitude: number }) {
+      if (this.user) {
+        this.user = { ...this.user, location };
+      }
+    },
     async fetchUser() {
       // This action is used to initialize the auth state, for example, on application load.
       // If a token exists (e.g., from localStorage), update the apiService header.

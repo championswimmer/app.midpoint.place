@@ -99,6 +99,8 @@ interface Location {
   longitude: number;
 }
 
+export type UserLocation = Location;
+
 export interface LoginUserRequest {
   username?: string;
   password?: string;
@@ -110,6 +112,8 @@ export interface UserResponse {
   token?: string;
   username?: string;
 }
+
+export type User = UserResponse;
 
 interface UserUpdateRequest {
   location?: Location;
@@ -170,8 +174,17 @@ class ApiService {
     return response.data;
   }
 
-  public async updateUserLocation(userId: string, data: UserUpdateRequest): Promise<UserResponse> {
-    const response = await this.axiosInstance.post<UserResponse>(`/users/${userId}`, data);
+  public async updateUser(user: User): Promise<UserResponse> {
+    if (!user.id) {
+      throw new Error('User ID is required to update user.');
+    }
+    const updateData: UserUpdateRequest = {};
+    if (user.location) {
+      updateData.location = user.location;
+    }
+    // Add other fields from User to UserUpdateRequest if needed in the future
+
+    const response = await this.axiosInstance.post<UserResponse>(`/users/${user.id}`, updateData);
     return response.data;
   }
 
@@ -227,3 +240,7 @@ class ApiService {
 // Export a singleton instance
 const apiService = new ApiService();
 export default apiService;
+
+// Export types that were not previously exported directly if needed by other modules
+// UserResponse, CreateUserRequest, LoginUserRequest, GroupResponse are already exported.
+// UserLocation and User are newly aliased and exported types.
