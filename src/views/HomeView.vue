@@ -4,6 +4,7 @@ import apiService, { type GroupResponse } from '../services/apiService';
 import GroupCard from '../components/GroupCard.vue';
 import { BTabs, BTab } from 'bootstrap-vue-next';
 import { useAuthStore } from '../stores/auth';
+import { RouterLink } from 'vue-router';
 
 const allGroups = ref<GroupResponse[]>([]);
 const createdGroups = ref<GroupResponse[]>([]);
@@ -13,9 +14,30 @@ const error = ref<string | null>(null);
 
 const authStore = useAuthStore();
 
+interface AnimatedWord {
+  text: string;
+  highlightClass: string;
+}
+
+const wordsToAnimate: AnimatedWord[] = [
+  { text: 'park', highlightClass: 'bg-success-subtle text-success-emphasis' },
+  { text: 'cafe', highlightClass: 'bg-warning-subtle text-warning-emphasis' }, // Using warning for light brown
+  { text: 'restaurant', highlightClass: 'bg-danger-subtle text-danger-emphasis' },
+  { text: 'pub', highlightClass: 'bg-primary-subtle text-primary-emphasis' }, // Assuming Bootstrap 5.3+ for orange
+  { text: 'museum', highlightClass: 'bg-info-subtle text-info-emphasis' },    // Using info for a gold-like hue
+  { text: 'nightclub', highlightClass: 'bg-dark-subtle text-dark-emphasis' },  // Using dark for dark blue
+];
+
+const currentWordIndex = ref(0);
+const animatedWord = ref<AnimatedWord>(wordsToAnimate[0]);
+
 onMounted(async () => {
-  // Initialize auth state and set token in apiService if available
   await authStore.fetchUser();
+
+  setInterval(() => {
+    currentWordIndex.value = (currentWordIndex.value + 1) % wordsToAnimate.length;
+    animatedWord.value = wordsToAnimate[currentWordIndex.value];
+  }, 1500);
 
   try {
     isLoading.value = true;
@@ -40,9 +62,25 @@ onMounted(async () => {
 <template>
   <main>
     <header>
-      <h1 class="text-center fw-bold fs-3 my-2">
-        Welcome to Midpoint Place
-      </h1>
+      <div class="container text-center my-3">
+        <h1 class="display-6 fw-bold mb-2">
+          Ready to find the perfect <span class="bg-primary-subtle text-primary-emphasis px-2 rounded">meeting
+            spot</span>?
+        </h1>
+        <p class="lead fs-5 mb-3">
+          Create a group, invite your friends, find a convinient&nbsp;
+          <Transition name="fade" mode="out-in">
+            <span :key="animatedWord.text" :class="animatedWord.highlightClass" class="px-2 rounded"
+              style="display: inline-block; min-width: 8rem; text-align: center;">
+              {{ animatedWord.text }}
+            </span>
+          </Transition>
+          &nbsp;at the middle from everyone!
+        </p>
+        <RouterLink to="/create_group" class="btn btn-primary btn-lg">
+          Create New Group
+        </RouterLink>
+      </div>
     </header>
     <section class="container mt-4">
       <div v-if="isLoading" class="text-center">
@@ -88,3 +126,15 @@ onMounted(async () => {
     </section>
   </main>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

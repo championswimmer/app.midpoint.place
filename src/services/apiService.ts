@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 
-// DTOs - Based on OpenAPI #/definitions
+// region: DTOs - Based on OpenAPI #/definitions
 // Basic Error Response
 interface ErrorResponse {
   message: string;
@@ -122,7 +122,7 @@ interface WaitlistSignupRequest {
 interface WaitlistSignupResponse {
   message: string;
 }
-// endregion DTOs
+// endregion: DTOs
 
 const BASE_URL = 'https://api.midpoint.place/v1';
 
