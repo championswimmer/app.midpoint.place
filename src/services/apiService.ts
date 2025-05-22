@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 
-// region DTOs - Based on OpenAPI #/definitions
+// DTOs - Based on OpenAPI #/definitions
 // Basic Error Response
 interface ErrorResponse {
   message: string;
