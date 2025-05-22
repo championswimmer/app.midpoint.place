@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { BNavbar, BNavbarBrand, BNavbarNav, BNavItem, BCollapse } from 'bootstrap-vue-next'
-import { LocateFixed, MapPinned, LogIn, UserPlus, User } from 'lucide-vue-next'
+import { LocateFixed, MapPinned, LogIn, UserPlus, User, LogOut } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth' // Import the auth store
 import { storeToRefs } from 'pinia' // Import storeToRefs for reactive access to getters
 
 const authStore = useAuthStore()
 const { isAuthenticated, currentUser } = storeToRefs(authStore) // Use storeToRefs for reactive getters
+
+const handleLogout = () => {
+  authStore.logout()
+}
 </script>
 
 <template>
@@ -41,6 +45,12 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore) // Use storeToRe
               <User class="me-1" :size="18" />
               {{ currentUser.username }}
             </span>
+          </BNavItem>
+          <BNavItem>
+            <a href="#" @click.prevent="handleLogout" class="nav-link d-flex align-items-center">
+              <LogOut class="me-1" :size="18" />
+              Logout
+            </a>
           </BNavItem>
         </template>
       </BNavbarNav>
