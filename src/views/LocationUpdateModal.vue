@@ -11,16 +11,19 @@
       </div>
 
       <div ref="mapContainer" class="map-container mb-3"></div>
-      <div v-if="currentLatLng" class="mb-3 font-monospace">
-        <small>Selected Location: {{ currentLatLng.latitude.toFixed(6) }}, {{ currentLatLng.longitude.toFixed(6)
-          }}</small>
+      <div v-if="currentLatLng" class="mb-3 fw-light">
+        <small>Selected Location:
+          <span class="font-monospace">
+            {{ currentLatLng.latitude.toFixed(6) }}, {{ currentLatLng.longitude.toFixed(6) }}
+          </span>
+        </small>
       </div>
       <div v-if="geolocationError" class="alert alert-warning" role="alert">
         {{ geolocationError }}
       </div>
     </div>
     <div class="d-flex justify-content-end mt-3">
-      <BButton variant="secondary" @click="closeModal" class="me-2">Cancel</BButton>
+      <BButton variant="secondary" @click``="closeModal" class="me-2">Cancel</BButton>
       <BButton variant="primary" @click="handleUpdateLocation" :disabled="!currentLatLng || isLoading">
         <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Update Location
@@ -38,6 +41,7 @@ import { loadGoogleMapsScript, getBrowserLocation as fetchBrowserLocation } from
 import apiService from '@/services/apiService'
 import type { User, UserLocation } from '@/services/apiService'
 import { LocateFixed } from 'lucide-vue-next';
+import mapPinSvg from '@/assets/map-pin.svg?raw'
 
 const locationStore = useLocationStore()
 const authStore = useAuthStore()
@@ -101,10 +105,12 @@ const loadMap = async () => {
       })
 
       const centerPin = document.createElement('img');
-      centerPin.src = "https://maps.gstatic.com/mapfiles/markers2/marker.png";
+      centerPin.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(mapPinSvg)}`;
       centerPin.style.position = 'absolute';
       centerPin.style.top = '50%';
       centerPin.style.left = '50%';
+      centerPin.style.width = '48px';
+      centerPin.style.height = '48px';
       centerPin.style.transform = 'translate(-50%, -100%)';
       centerPin.style.pointerEvents = 'none';
       mapContainer.value.appendChild(centerPin);
