@@ -1,0 +1,97 @@
+/* Bootstrap Theme Overrides */
+
+/* Override button variants */
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: rgb(var(--bs-primary-rgb));
+  --bs-btn-border-color: rgb(var(--bs-primary-rgb));
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: rgb(var(--bs-primary-rgb-dark));
+  --bs-btn-hover-border-color: rgb(var(--bs-primary-rgb-dark));
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb-light);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: rgb(var(--bs-primary-rgb-dark));
+  --bs-btn-active-border-color: rgb(var(--bs-primary-rgb-dark));
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: rgb(var(--bs-primary-rgb));
+  --bs-btn-disabled-border-color: rgb(var(--bs-primary-rgb));
+}
+
+.btn-secondary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: rgb(var(--bs-secondary-rgb));
+  --bs-btn-border-color: rgb(var(--bs-secondary-rgb));
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: rgb(var(--bs-secondary-rgb-dark));
+  --bs-btn-hover-border-color: rgb(var(--bs-secondary-rgb-dark));
+  --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb-light);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: rgb(var(--bs-secondary-rgb-dark));
+  --bs-btn-active-border-color: rgb(var(--bs-secondary-rgb-dark));
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: rgb(var(--bs-secondary-rgb));
+  --bs-btn-disabled-border-color: rgb(var(--bs-secondary-rgb));
+}
+
+/* Override link colors */
+a {
+  color: rgb(var(--bs-primary-rgb));
+}
+
+a:hover {
+  color: rgb(var(--bs-primary-rgb-dark));
+}
+
+/* Override text colors */
+.text-primary {
+  color: rgb(var(--bs-primary-rgb)) !important;
+}
+
+.text-secondary {
+  color: rgb(var(--bs-secondary-rgb)) !important;
+}
+
+/* Override background colors */
+.bg-primary {
+  background-color: rgb(var(--bs-primary-rgb)) !important;
+}
+
+.bg-secondary {
+  background-color: rgb(var(--bs-secondary-rgb)) !important;
+}
+
+/* Override border colors */
+.border-primary {
+  border-color: rgb(var(--bs-primary-rgb)) !important;
+}
+
+.border-secondary {
+  border-color: rgb(var(--bs-secondary-rgb)) !important;
+}
+
+/* Override form controls */
+.form-control:focus {
+  border-color: rgba(var(--bs-primary-rgb), 0.5);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.form-check-input:checked {
+  background-color: rgb(var(--bs-primary-rgb));
+  border-color: rgb(var(--bs-primary-rgb));
+}
+
+/* Pagination */
+.page-item.active .page-link {
+  background-color: rgb(var(--bs-primary-rgb));
+  border-color: rgb(var(--bs-primary-rgb));
+}
+
+.page-link {
+  color: rgb(var(--bs-primary-rgb));
+}
+
+.page-link:hover {
+  color: rgb(var(--bs-primary-rgb-dark));
+}

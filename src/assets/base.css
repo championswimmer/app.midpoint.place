@@ -1,13 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import './theme-config.css';
 
 :root {
   --bs-body-font-family: 'Lexend', sans-serif !important;
-  /* Primary Color: muted purple */
-  --bs-primary-rgb: 102, 51, 153 !important;
-  --bs-primary-rgb-dark: 70, 35, 107 !important;
-  --bs-primary-rgb-light: 130, 77, 187 !important;
-  /* Secondary Color: muted dark orange */
-  --bs-secondary-rgb: 232, 128, 0 !important;
-  --bs-secondary-rgb-dark: 169, 96, 0 !important;
-  --bs-secondary-rgb-light: 240, 159, 0 !important;
+
+  /* Bootstrap color definitions */
+  --bs-primary: rgb(var(--bs-primary-rgb)) !important;
+  --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1) !important;
+  --bs-primary-border-subtle: rgba(var(--bs-primary-rgb), 0.3) !important;
+  --bs-primary-text-emphasis: rgb(var(--bs-primary-rgb-dark)) !important;
+  --bs-primary-bg-subtle: rgba(var(--bs-primary-rgb), 0.1) !important;
+  --bs-primary-border-subtle: rgba(var(--bs-primary-rgb), 0.2) !important;
+
+  --bs-secondary: rgb(var(--bs-secondary-rgb)) !important;
+  --bs-secondary-bg-subtle: rgba(var(--bs-secondary-rgb), 0.1) !important;
+  --bs-secondary-border-subtle: rgba(var(--bs-secondary-rgb), 0.3) !important;
+  --bs-secondary-text-emphasis: rgb(var(--bs-secondary-rgb-dark)) !important;
+
+  /* Bootstrap button hover states */
+  --bs-btn-hover-bg-shade-amount: 15%;
+  --bs-btn-hover-bg-tint-amount: 15%;
+  --bs-btn-active-bg-shade-amount: 20%;
+  --bs-btn-active-bg-tint-amount: 20%;
 }
