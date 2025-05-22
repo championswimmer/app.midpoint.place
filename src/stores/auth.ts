@@ -94,24 +94,21 @@ export const useAuthStore = defineStore('auth', {
       router.push('/login');
     },
     async fetchUser() {
-      // This action could be used to fetch user data if only a token is available
-      // For example, on application load to verify token and get user info
-      // Requires an endpoint like /users/me or /users/{id}
-      // For now, we assume the user object is populated at login.
-      // If a token exists from localStorage, we might want to verify it
-      // and fetch user data.
-      if (this.token && !this.user) {
-        // Simulate fetching user based on token - replace with actual API call
-        // This is a placeholder. You'd typically have a `getMe` endpoint.
-        // For now, we'll re-use the token to update the apiService header,
-        // but ideally, we'd fetch user data.
+      // This action is used to initialize the auth state, for example, on application load.
+      // If a token exists (e.g., from localStorage), update the apiService header.
+      if (this.token) {
         apiService.updateAuthToken(this.token);
-        // Placeholder: If your API doesn't return full user on login,
-        // or if you need to refresh user data, you'd call an API here.
-        // e.g., this.user = await apiService.getMe();
-        // For now, if token exists but no user, it implies a previous session.
-        // We might need to navigate to login or attempt to get user data.
-        // This part needs clarification based on API capabilities for session resumption.
+        // The original logic to fetch full user details can be expanded here if needed,
+        // for example, by calling a /users/me endpoint.
+        // For now, ensuring the token is set in apiService is the primary goal.
+        if (!this.user) {
+          // This block can be used to fetch user details if they are not already in the store.
+          // console.log('User details not in store, consider fetching from /users/me');
+        }
+      } else {
+        // If no token, ensure any potentially stale token in apiService is cleared.
+        // This is usually handled by logout, but good for consistency.
+        apiService.updateAuthToken('');
       }
     }
   },

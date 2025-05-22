@@ -61,7 +61,7 @@ interface GroupUserResponse {
   user_id: number;
 }
 
-interface GroupResponse {
+export interface GroupResponse {
   code: string;
   creator: GroupCreator;
   id: string;

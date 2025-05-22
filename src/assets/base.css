@@ -17,6 +17,9 @@
   --bs-secondary-border-subtle: rgba(var(--bs-secondary-rgb), 0.3) !important;
   --bs-secondary-text-emphasis: rgb(var(--bs-secondary-rgb-dark)) !important;
 
+  --bs-link-color: rgb(var(--bs-secondary-rgb)) !important;
+  --bs-link-hover-color: rgb(var(--bs-secondary-rgb-dark)) !important;
+
   /* Bootstrap button hover states */
   --bs-btn-hover-bg-shade-amount: 15%;
   --bs-btn-hover-bg-tint-amount: 15%;
