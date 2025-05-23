@@ -29,7 +29,7 @@ enum PlaceType {
 }
 
 // Group DTOs
-interface CreateGroupRequest {
+export interface CreateGroupRequest {
   name: string;
   radius?: number;
   secret?: string;
