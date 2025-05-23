@@ -41,7 +41,7 @@ interface GroupCreator {
   username: string;
 }
 
-interface GroupPlaceResponse {
+export interface GroupPlaceResponse {
   address: string;
   group_id: string;
   id: string;
@@ -54,7 +54,7 @@ interface GroupPlaceResponse {
   type: PlaceType;
 }
 
-interface GroupUserResponse {
+export interface GroupUserResponse {
   group_id: string;
   latitude: number;
   longitude: number;

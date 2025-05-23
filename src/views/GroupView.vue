@@ -7,7 +7,7 @@
         <p>
           <User :size="18" class="me-1" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
-            }}</strong>
+          }}</strong>
         </p>
         <p>
           <Users :size="18" class="me-1" /> Members: {{ groupMemberCount }}
@@ -30,12 +30,7 @@
       </div>
     </div>
 
-    <!-- Placeholder for future member list -->
-    <div class="mt-4">
-      <h3>Members</h3>
-      <p>Member list will be here.</p>
-    </div>
-
+    <!-- Join/Leave Group Button -->
     <div class="mt-4 d-flex gap-2">
       <BButton variant="outline-success" @click="joinGroupAction" :disabled="isGroupMember || isUpdatingMembership">
         <span v-if="isUpdatingMembership && !isGroupMember" class="spinner-border spinner-border-sm me-1" role="status"
@@ -50,6 +45,30 @@
         Leave Group
       </BButton>
     </div>
+
+    <!-- Tabs for Members and Places -->
+    <BTabs v-model="activeTab" class="mt-4">
+      <BTab title="Members">
+        <div v-if="group && group.members && group.members.length > 0" class="row mt-3">
+          <div v-for="member in group.members" :key="member.user_id" class="col-md-4 mb-3">
+            <MemberCard :member="member" />
+          </div>
+        </div>
+        <p v-else-if="group && (!group.members || group.members.length === 0)" class="mt-3">
+          No members in this group yet.
+        </p>
+      </BTab>
+      <BTab title="Places">
+        <div v-if="group && group.places && group.places.length > 0" class="row mt-3">
+          <div v-for="place in group.places" :key="place.id" class="col-md-4 mb-3">
+            <PlaceCard :place="place" />
+          </div>
+        </div>
+        <p v-else-if="group && (!group.places || group.places.length === 0)" class="mt-3">
+          No places added to this group yet.
+        </p>
+      </BTab>
+    </BTabs>
 
   </div>
   <div v-else-if="isLoading" class="container mt-4 text-center">
@@ -67,11 +86,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import apiService, { type GroupResponse, type GroupUserJoinRequest } from '@/services/apiService';
+import apiService, { type GroupResponse, type GroupUserJoinRequest, type GroupUserResponse, type GroupPlaceResponse } from '@/services/apiService';
 import { useErrorStore } from '@/stores/error';
 import { useAuthStore } from '@/stores/auth';
-import { BButton } from 'bootstrap-vue-next';
+import { BButton, BTabs, BTab } from 'bootstrap-vue-next';
 import { User, Users, Lock, Unlock, EyeOff, CircleDot, UserPlusIcon, UserMinusIcon } from 'lucide-vue-next';
+import MemberCard from '@/components/MemberCard.vue';
+import PlaceCard from '@/components/PlaceCard.vue';
 
 const route = useRoute();
 const errorStore = useErrorStore();
@@ -81,6 +102,7 @@ const group = ref<GroupResponse | null>(null);
 const isLoading = ref(true);
 const isUpdatingMembership = ref(false);
 const error = ref<string | null>(null);
+const activeTab = ref(0); // 0 for Members, 1 for Places
 
 const groupCode = computed(() => route.params.groupcode as string);
 
