@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import CreateGroupView from '../views/CreateGroupView.vue'
 import GroupView from '../views/GroupView.vue'
+import { usePostHog } from '../services/posthog'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,18 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
   ],
+})
+
+const { posthog } = usePostHog()
+
+router.beforeEach((to, from) => {
+  if (to.path !== from.path) {
+    posthog.capture('$pageleave')
+  }
+})
+
+router.afterEach(() => {
+  posthog.capture('$pageview')
 })
 
 export default router
