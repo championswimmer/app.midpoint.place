@@ -20,4 +20,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    host: true,
+    allowedHosts: ['localhost', '127.0.0.1', '0.0.0.0', 'app.midpoint.place', 'mpp.test'],
+  },
+  define: {
+    __GOOGLE_MAPS_API_KEY__: JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
+  }
 })

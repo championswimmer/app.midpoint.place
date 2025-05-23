@@ -4,13 +4,15 @@
       <p>Please select your location on the map.</p>
 
       <div class="d-flex mb-2">
-        <BButton variant="outline-primary" @click="panToBrowserLocation" size="sm">
+        <BButton variant="outline-primary" @click="triggerPanToBrowserLocation" size="sm">
           <LocateFixed :size="18" class="me-1" />
           Locate Me
         </BButton>
       </div>
 
-      <div ref="mapContainer" class="map-container mb-3"></div>
+      <LocationPickerMap ref="locationPickerMapRef" :initial-location="authStore.user?.location"
+        @update:location="handleLocationUpdateFromMap" @map-load-error="handleMapLoadError" class="mb-3" />
+
       <div v-if="currentLatLng" class="mb-3 fw-light">
         <small>Selected Location:
           <span class="font-monospace">
@@ -23,7 +25,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-end mt-3">
-      <BButton variant="secondary" @click``="closeModal" class="me-2">Cancel</BButton>
+      <BButton variant="secondary" @click="closeModal" class="me-2">Cancel</BButton>
       <BButton variant="primary" @click="handleUpdateLocation" :disabled="!currentLatLng || isLoading">
         <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Update Location
@@ -33,18 +35,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { BModal, BButton } from 'bootstrap-vue-next'
 import { useLocationStore } from '@/stores/locationStore'
 import { useAuthStore } from '@/stores/auth'
-import { loadGoogleMapsScript, getBrowserLocation as fetchBrowserLocation } from '@/services/mapService'
+import { useErrorStore } from '@/stores/error'
 import apiService from '@/services/apiService'
 import type { User, UserLocation } from '@/services/apiService'
-import { LocateFixed } from 'lucide-vue-next';
-import mapPinSvg from '@/assets/map-pin.svg?raw'
+import { LocateFixed } from 'lucide-vue-next'
+import LocationPickerMap from '@/components/LocationPickerMap.vue'
 
 const locationStore = useLocationStore()
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 const isModalVisible = computed({
   get: () => locationStore.isLocationUpdateModalVisible,
@@ -55,87 +58,29 @@ const isModalVisible = computed({
   }
 })
 
-const mapContainer = ref<HTMLElement | null>(null)
-// @ts-expect-error google is a global variable from Google Maps script
-const map = ref<google.maps.Map | null>(null)
-const currentLatLng = ref<UserLocation | null>(null)
+const locationPickerMapRef = ref<InstanceType<typeof LocationPickerMap> | null>(null)
+const currentLatLng = ref<UserLocation | null>(authStore.user?.location || null)
 const isLoading = ref(false)
 const geolocationError = ref<string | null>(null)
-// @ts-expect-error google is a global variable from Google Maps script
-let mapIdleListener: google.maps.MapsEventListener | null = null
 
-const DEFAULT_ZOOM = 8
-const BROWSER_LOC_ZOOM = 16
-
-const panToBrowserLocation = async () => {
+const triggerPanToBrowserLocation = async () => {
   geolocationError.value = null // Clear previous errors
-  const browserLoc = await fetchBrowserLocation()
-  if (browserLoc && map.value) {
-    map.value.setCenter({ lat: browserLoc.latitude, lng: browserLoc.longitude })
-    map.value.setZoom(BROWSER_LOC_ZOOM)
-    // currentLatLng will be updated by the map 'idle' event listener, so no need to set it directly here unless immediate feedback is desired before map idle.
-    // For consistency, let's allow the idle listener to set currentLatLng.
-    // currentLatLng.value = browserLoc;
-  } else if (!browserLoc) {
-    geolocationError.value = 'Could not get your current location. Please ensure location services are enabled and permission is granted.'
-    if (!navigator.geolocation) {
-      geolocationError.value = 'Geolocation is not supported by your browser.'
+  if (locationPickerMapRef.value) {
+    const newLocation = await locationPickerMapRef.value.panToBrowserLocation()
+    if (newLocation) {
+      // currentLatLng will be updated by the map component's emit event
+    } else {
+      // Error messages are handled by the map component via emits
     }
   }
 }
 
-const loadMap = async () => {
-  try {
-    await loadGoogleMapsScript()
-    // @ts-expect-error google is a global variable from Google Maps script
-    if (mapContainer.value && window.google && window.google.maps) {
-      const userLocation = authStore.user?.location
-      const initialCenter = userLocation
-        ? { lat: userLocation.latitude, lng: userLocation.longitude }
-        : { lat: 37.0902, lng: -95.7129 } // Default to center of US
-      const initialZoom = userLocation ? BROWSER_LOC_ZOOM : DEFAULT_ZOOM
-      // @ts-expect-error google is a global variable from Google Maps script
-      map.value = new window.google.maps.Map(mapContainer.value, {
-        center: initialCenter,
-        zoom: initialZoom,
-        mapTypeControl: false,
-        streetViewControl: false,
-        zoomControl: true,
-        scrollwheel: true,
-      })
+const handleLocationUpdateFromMap = (location: UserLocation | null) => {
+  currentLatLng.value = location
+}
 
-      const centerPin = document.createElement('img');
-      centerPin.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(mapPinSvg)}`;
-      centerPin.style.position = 'absolute';
-      centerPin.style.top = '50%';
-      centerPin.style.left = '50%';
-      centerPin.style.width = '48px';
-      centerPin.style.height = '48px';
-      centerPin.style.transform = 'translate(-50%, -100%)';
-      centerPin.style.pointerEvents = 'none';
-      mapContainer.value.appendChild(centerPin);
-
-      mapIdleListener = map.value.addListener('idle', () => {
-        const center = map.value?.getCenter()
-        if (center) {
-          currentLatLng.value = { latitude: center.lat(), longitude: center.lng() }
-        }
-      })
-
-      // Set initial currentLatLng based on map center after listeners are attached
-      const currentMapCenter = map.value?.getCenter()
-      if (currentMapCenter) {
-        currentLatLng.value = { latitude: currentMapCenter.lat(), longitude: currentMapCenter.lng() }
-      }
-
-      if (!userLocation) {
-        await panToBrowserLocation() // Use the new method
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load Google Maps:', error)
-    geolocationError.value = 'Could not load Google Maps. Please try again later.'
-  }
+const handleMapLoadError = (message: string) => {
+  geolocationError.value = message
 }
 
 const closeModal = () => {
@@ -143,14 +88,8 @@ const closeModal = () => {
 }
 
 const onModalHidden = () => {
-  currentLatLng.value = null
+  // currentLatLng is reset when modal opens based on authStore.user.location or to null
   geolocationError.value = null
-  if (mapIdleListener) {
-    mapIdleListener.remove()
-    mapIdleListener = null
-  }
-  // Consider removing custom controls if map instance persists and modal is reopened
-  // For now, assuming map is re-initialized or control is fine to persist or be re-added
 }
 
 const handleUpdateLocation = async () => {
@@ -165,7 +104,7 @@ const handleUpdateLocation = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to update location:', error)
-    geolocationError.value = 'Failed to update location. Please try again.'
+    errorStore.setError('Failed to update location. Please try again.')
   } finally {
     isLoading.value = false
   }
@@ -173,28 +112,30 @@ const handleUpdateLocation = async () => {
 
 watch(() => locationStore.isLocationUpdateModalVisible, (newValue) => {
   if (newValue) {
-    // Ensure map container is visible and ready before loading map
-    setTimeout(() => {
-      loadMap()
-    }, 100);
+    // Reset currentLatLng based on user's stored location when modal opens
+    currentLatLng.value = authStore.user?.location || null;
+    geolocationError.value = null;
+    // If user has no location, attempt to pan to browser location
+    // The map component itself will try to pan if no initial location is provided, so this might be redundant
+    // or could be a specific UX choice.
+    // For now, let the map component handle its initial pan if no initialLocation is set.
+    if (!authStore.user?.location) {
+      // Delay to ensure map is loaded before trying to pan
+      setTimeout(() => {
+        if (isModalVisible.value) { // Check if modal is still visible
+          triggerPanToBrowserLocation();
+        }
+      }, 200); // Adjust delay as needed
+    }
   }
 })
 
-onUnmounted(() => {
-  if (mapIdleListener) {
-    mapIdleListener.remove()
-  }
-  // Clean up custom controls if necessary, though usually map instance is destroyed with component
-})
+// No onUnmounted needed here for map listeners as they are in the child component
 
 </script>
 
 <style scoped>
-.map-container {
-  height: 400px;
-  width: 100%;
-  position: relative;
-}
+/* Styles from the old component can be removed if not specifically for the modal shell */
 
 .modal-body-content {}
 </style>

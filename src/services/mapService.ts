@@ -1,4 +1,5 @@
-export const GOOGLE_MAPS_API_KEY = 'AIzaSyDBVQaCwZ0f-AzA83juyqesLZlj72jWdYE' // TODO: Replace with your actual API key
+// @ts-expect-error __GOOGLE_MAPS_API_KEY__ is defined in vite.config.ts
+export const GOOGLE_MAPS_API_KEY = __GOOGLE_MAPS_API_KEY__
 
 // TODO: Implement map related functions here, e.g.:
 // - initMap
