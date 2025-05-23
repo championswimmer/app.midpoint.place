@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance } from 'axios';
+import axios, { type AxiosInstance, AxiosHeaders } from 'axios';
 import { useErrorStore } from '@/stores/error';
 
 // region: DTOs - Based on OpenAPI #/definitions
@@ -151,6 +151,25 @@ class ApiService {
         } else if (error.message) {
           errorStore.setError(error.message);
         }
+        return Promise.reject(error);
+      }
+    );
+
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          // Ensure headers object exists
+          if (!config.headers) {
+            config.headers = new AxiosHeaders();
+          }
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        // Do something with request error, e.g., log it or display a generic error
+        // For now, just pass it along
         return Promise.reject(error);
       }
     );
