@@ -18,7 +18,11 @@ declare module 'vue' {
     ErrorToast: typeof import('./src/components/ErrorToast.vue')['default']
     GroupCard: typeof import('./src/components/GroupCard.vue')['default']
     LocationPickerMap: typeof import('./src/components/LocationPickerMap.vue')['default']
+    MapView: typeof import('./src/components/MapView.vue')['default']
+    MemberList: typeof import('./src/components/MemberList.vue')['default']
     NavBar: typeof import('./src/components/NavBar.vue')['default']
+    PlaceInfo: typeof import('./src/components/PlaceInfo.vue')['default']
+    PlaceTypeFilter: typeof import('./src/components/PlaceTypeFilter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

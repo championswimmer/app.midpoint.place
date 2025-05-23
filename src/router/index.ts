@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import CreateGroupView from '../views/CreateGroupView.vue'
+import GroupView from '../views/GroupView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,12 @@ const router = createRouter({
       path: '/create_group',
       name: 'create_group',
       component: CreateGroupView,
+    },
+    {
+      path: '/groups/:groupcode',
+      name: 'group-view',
+      component: GroupView,
+      props: true
     },
     {
       path: '/about',
