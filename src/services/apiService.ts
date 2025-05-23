@@ -244,3 +244,4 @@ export default apiService;
 // Export types that were not previously exported directly if needed by other modules
 // UserResponse, CreateUserRequest, LoginUserRequest, GroupResponse are already exported.
 // UserLocation and User are newly aliased and exported types.
+export type { GroupUserJoinRequest };
