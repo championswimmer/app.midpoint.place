@@ -5,19 +5,19 @@
         <h1 class="text-primary fw-bolder">{{ group.name }}</h1>
         <p class="text-muted">Group Code: <span class="font-monospace">{{ group.code }}</span></p>
         <p>
-          <User :size="18" class="me-1" /> Created by: <strong class="text-secondary fw-medium">{{
+          <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
           }}</strong>
         </p>
         <p>
-          <Users :size="18" class="me-1" /> Members: {{ groupMemberCount }}
+          <Users :size="18" class="me-1 align-text-bottom" /> Members: {{ groupMemberCount }}
         </p>
         <p>
-          <component :is="groupTypeIcon(group.type)" :size="18" class="me-1" /> Type: <span
+          <component :is="groupTypeIcon(group.type)" :size="18" class="me-1 align-text-bottom" /> Type: <span
             :class="groupTypeColorClass">{{ group.type }}</span>
         </p>
         <p v-if="group.radius">
-          <CircleDot :size="18" class="me-1" /> Radius: {{ (group.radius / 1000).toFixed(1) }} km
+          <CircleDot :size="18" class="me-1 align-text-bottom" /> Radius: {{ (group.radius / 1000).toFixed(1) }} km
         </p>
       </div>
       <div class="col-md-4">
@@ -35,13 +35,13 @@
       <BButton variant="outline-success" @click="joinGroupAction" :disabled="isGroupMember || isUpdatingMembership">
         <span v-if="isUpdatingMembership && !isGroupMember" class="spinner-border spinner-border-sm me-1" role="status"
           aria-hidden="true"></span>
-        <UserPlusIcon v-else :size="18" class="me-1" />
+        <UserPlusIcon v-else :size="18" class="me-1 align-middle" />
         Join Group
       </BButton>
       <BButton variant="outline-danger" @click="leaveGroupAction" :disabled="!isGroupMember || isUpdatingMembership">
         <span v-if="isUpdatingMembership && isGroupMember" class="spinner-border spinner-border-sm me-1" role="status"
           aria-hidden="true"></span>
-        <UserMinusIcon v-else :size="18" class="me-1" />
+        <UserMinusIcon v-else :size="18" class="me-1 align-middle" />
         Leave Group
       </BButton>
     </div>
@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import apiService, { type GroupResponse, type GroupUserJoinRequest, type GroupUserResponse, type GroupPlaceResponse } from '@/services/apiService';
+import apiService, { type GroupResponse, type GroupUserJoinRequest } from '@/services/apiService';
 import { useErrorStore } from '@/stores/error';
 import { useAuthStore } from '@/stores/auth';
 import { BButton, BTabs, BTab } from 'bootstrap-vue-next';
