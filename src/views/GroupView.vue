@@ -7,7 +7,7 @@
         <p>
           <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
-          }}</strong>
+            }}</strong>
         </p>
         <p>
           <Users :size="18" class="me-1 align-text-bottom" /> Members: {{ groupMemberCount }}
