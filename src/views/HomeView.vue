@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import apiService, { type GroupResponse } from '../services/apiService';
 import GroupCard from '../components/GroupCard.vue';
 import { BTabs, BTab } from 'bootstrap-vue-next';
@@ -15,6 +16,7 @@ const error = ref<string | null>(null);
 
 const authStore = useAuthStore();
 const locationStore = useLocationStore();
+const router = useRouter();
 
 interface AnimatedWord {
   text: string;
@@ -36,9 +38,21 @@ const animatedWord = ref<AnimatedWord>(wordsToAnimate[0]);
 onMounted(async () => {
   await authStore.fetchUser();
 
+  if (!authStore.isAuthenticated) {
+    router.push('/login');
+    return; // Stop further execution in onMounted if not authenticated
+  }
+
   if (authStore.user && (!authStore.user.location || (authStore.user.location.latitude === 0 && authStore.user.location.longitude === 0))) {
     locationStore.openLocationUpdateModal();
   }
+
+  // Watch for changes in authentication state after initial check
+  watch(() => authStore.isAuthenticated, (isAuth) => {
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, { immediate: false }); // immediate: false, because we already check onMounted
 
   setInterval(() => {
     currentWordIndex.value = (currentWordIndex.value + 1) % wordsToAnimate.length;
