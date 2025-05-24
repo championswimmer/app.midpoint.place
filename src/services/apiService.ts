@@ -60,6 +60,7 @@ export interface GroupUserResponse {
   longitude: number;
   role: GroupUserRole;
   user_id: number;
+  username: string;
 }
 
 export interface GroupResponse {

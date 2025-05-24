@@ -1,9 +1,9 @@
 <template>
   <BCard class="h-100">
     <BCardBody>
-      <BCardTitle class="mb-3">
+      <BCardTitle class="mb-3 fs-6">
         <UserIcon :size="20" class="me-2 align-middle" />
-        <span class="align-middle">User ID: {{ member.user_id }}</span>
+        <span class="align-middle">{{ member.username }}</span>
       </BCardTitle>
       <BCardText v-if="member.latitude && member.longitude">
         <MapPinIcon :size="16" class="me-1 align-text-bottom" />

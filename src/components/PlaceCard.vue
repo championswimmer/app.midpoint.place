@@ -1,7 +1,7 @@
 <template>
   <BCard class="h-100">
     <BCardBody>
-      <BCardTitle class="mb-2">
+      <BCardTitle class="mb-2 fs-6">
         <BuildingIcon :size="20" class="me-2 align-middle" />
         <span class="align-middle">{{ place.name }}</span>
       </BCardTitle>
