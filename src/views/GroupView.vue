@@ -7,7 +7,7 @@
         <p>
           <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
-            }}</strong>
+          }}</strong>
         </p>
         <p>
           <Users :size="18" class="me-1 align-text-bottom" /> Members: {{ groupMemberCount }}
@@ -59,8 +59,8 @@
         </p>
       </BTab>
       <BTab title="Places">
-        <div v-if="group && group.places && group.places.length > 0" class="row mt-3">
-          <div v-for="place in group.places" :key="place.id" class="col-md-4 mb-3">
+        <div v-if="group && sortedPlaces && sortedPlaces.length > 0" class="row mt-3">
+          <div v-for="place in sortedPlaces" :key="place.id" class="col-md-4 mb-3">
             <PlaceCard :place="place" />
           </div>
         </div>
@@ -105,6 +105,18 @@ const error = ref<string | null>(null);
 const activeTab = ref(0); // 0 for Members, 1 for Places
 
 const groupCode = computed(() => route.params.groupcode as string);
+
+const sortedPlaces = computed(() => {
+  if (group.value && group.value.places) {
+    return [...group.value.places].sort((a, b) => {
+      // Handle cases where rating might be null or undefined
+      const ratingA = a.rating ?? 0;
+      const ratingB = b.rating ?? 0;
+      return ratingB - ratingA; // Sort descending
+    });
+  }
+  return [];
+});
 
 const groupMemberCount = computed(() => {
   if (group.value) {
