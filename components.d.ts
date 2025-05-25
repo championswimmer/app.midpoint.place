@@ -22,6 +22,7 @@ declare module 'vue' {
     MapView: typeof import('./src/components/MapView.vue')['default']
     MemberCard: typeof import('./src/components/MemberCard.vue')['default']
     MemberList: typeof import('./src/components/MemberList.vue')['default']
+    MultiItemMap: typeof import('./src/components/MultiItemMap.vue')['default']
     NavBar: typeof import('./src/components/NavBar.vue')['default']
     PlaceCard: typeof import('./src/components/PlaceCard.vue')['default']
     PlaceInfo: typeof import('./src/components/PlaceInfo.vue')['default']

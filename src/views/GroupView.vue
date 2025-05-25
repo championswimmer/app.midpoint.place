@@ -21,10 +21,11 @@
         </p>
       </div>
       <div class="col-md-4">
-        <!-- Placeholder for future map -->
-        <div class="card">
+        <MultiItemMap v-if="group && mapMidpoint" :users="mapUsers" :places="mapPlaces" :midpoint="mapMidpoint"
+          @map-load-error="handleMapError" />
+        <div v-else class="card">
           <div class="card-body text-center">
-            <p class="card-text">Map will be here</p>
+            <p class="card-text">Map loading or not available...</p>
           </div>
         </div>
       </div>
@@ -98,6 +99,7 @@ import { User, Users, Lock, Unlock, EyeOff, CircleDot, UserPlusIcon, UserMinusIc
 import MemberCard from '@/components/MemberCard.vue';
 import PlaceCard from '@/components/PlaceCard.vue';
 import JoinGroupModal from '@/components/JoinGroupModal.vue';
+import MultiItemMap from '@/components/MultiItemMap.vue';
 
 const route = useRoute();
 const errorStore = useErrorStore();
@@ -109,8 +111,39 @@ const isUpdatingMembership = ref(false);
 const error = ref<string | null>(null);
 const activeTab = ref(0); // 0 for Members, 1 for Places
 const isJoinGroupModalVisible = ref(false); // Added for modal visibility
+const mapError = ref<string | null>(null);
 
 const groupCode = computed(() => route.params.groupcode as string);
+
+const mapUsers = computed(() => {
+  if (!group.value || !group.value.members) return [];
+  return group.value.members.map(member => ({
+    id: member.user_id,
+    location: { latitude: member.latitude, longitude: member.longitude }, // Use direct lat/lng
+    username: member.username,
+    name: member.username, // for MapItem compatibility
+  }));
+});
+
+const mapPlaces = computed(() => {
+  if (!group.value || !group.value.places) return [];
+  return group.value.places.map(place => ({
+    ...place,
+    location: { latitude: place.latitude, longitude: place.longitude }, // Use direct lat/lng
+  }));
+});
+
+const mapMidpoint = computed(() => {
+  // Removed direct check for group.center_latitude/longitude as it's not in GroupResponse
+  // Fallback logic if group center is not defined
+  if (mapPlaces.value.length > 0 && mapPlaces.value[0].location) {
+    return mapPlaces.value[0].location;
+  }
+  if (mapUsers.value.length > 0 && mapUsers.value[0].location) {
+    return mapUsers.value[0].location;
+  }
+  return { latitude: 37.0902, longitude: -95.7129 }; // Default to center of US
+});
 
 const sortedPlaces = computed(() => {
   if (group.value && group.value.places) {
@@ -168,6 +201,12 @@ const groupTypeIcon = (type: string) => {
     default:
       return Unlock;
   }
+};
+
+const handleMapError = (message: string) => {
+  mapError.value = message;
+  // Optionally, display this error in the UI more prominently
+  console.error("Map Error:", message);
 };
 
 async function refreshGroupDetails() {
