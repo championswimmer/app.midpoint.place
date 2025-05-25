@@ -7,7 +7,7 @@
         <p>
           <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
-            }}</strong>
+          }}</strong>
         </p>
         <p>
           <Users :size="18" class="me-1 align-text-bottom" /> Members: {{ groupMemberCount }}
@@ -70,6 +70,10 @@
       </BTab>
     </BTabs>
 
+    <!-- Join Group Modal -->
+    <JoinGroupModal :is-visible="isJoinGroupModalVisible" :group-code="groupCode"
+      @update:is-visible="isJoinGroupModalVisible = $event" @join-successful="handleJoinSuccess" />
+
   </div>
   <div v-else-if="isLoading" class="container mt-4 text-center">
     <div class="spinner-border text-primary" role="status">
@@ -86,13 +90,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import apiService, { type GroupResponse, type GroupUserJoinRequest } from '@/services/apiService';
+import apiService, { type GroupResponse } from '@/services/apiService';
 import { useErrorStore } from '@/stores/error';
 import { useAuthStore } from '@/stores/auth';
 import { BButton, BTabs, BTab } from 'bootstrap-vue-next';
 import { User, Users, Lock, Unlock, EyeOff, CircleDot, UserPlusIcon, UserMinusIcon } from 'lucide-vue-next';
 import MemberCard from '@/components/MemberCard.vue';
 import PlaceCard from '@/components/PlaceCard.vue';
+import JoinGroupModal from '@/components/JoinGroupModal.vue';
 
 const route = useRoute();
 const errorStore = useErrorStore();
@@ -103,6 +108,7 @@ const isLoading = ref(true);
 const isUpdatingMembership = ref(false);
 const error = ref<string | null>(null);
 const activeTab = ref(0); // 0 for Members, 1 for Places
+const isJoinGroupModalVisible = ref(false); // Added for modal visibility
 
 const groupCode = computed(() => route.params.groupcode as string);
 
@@ -191,32 +197,22 @@ async function refreshGroupDetails() {
 }
 
 async function joinGroupAction() {
-  if (!groupCode.value || !authStore.currentUser || !authStore.currentUser.location) {
-    error.value = "Cannot join group: Missing group code, user information, or user location.";
-    // Potentially show a toast or more specific user feedback
+  if (!groupCode.value || !authStore.currentUser) {
+    error.value = "Cannot join group: Missing group code or user information.";
     return;
   }
-  isUpdatingMembership.value = true;
-  error.value = null; // Clear previous errors
-  try {
-    const joinData: GroupUserJoinRequest = {
-      latitude: authStore.currentUser.location.latitude,
-      longitude: authStore.currentUser.location.longitude,
-    };
-    await apiService.joinGroup(groupCode.value, joinData);
-    await refreshGroupDetails(); // Refresh group data to reflect membership change
-  } catch (err) {
-    console.error('Failed to join group:', err);
-    const errorResponse = err as { response?: { data?: { detail?: string } } };
-    if (errorResponse.response && errorResponse.response.data && errorResponse.response.data.detail) {
-      error.value = errorResponse.response.data.detail;
-    } else {
-      error.value = 'Failed to join group. Please try again later.';
-    }
-    // errorStore.setError(error.value); // Optionally set global error
-  } finally {
-    isUpdatingMembership.value = false;
+  if (!authStore.currentUser.location) {
+    error.value = "Your location is not set. Please update your location first.";
+    // TODO: Optionally, you could prompt the user to update their location from here.
+    // For now, we just show an error and they would use the global location update mechanism.
+    return;
   }
+  isJoinGroupModalVisible.value = true; // Open the modal
+}
+
+async function handleJoinSuccess() {
+  isJoinGroupModalVisible.value = false; // Close modal on success
+  await refreshGroupDetails(); // Refresh group details
 }
 
 async function leaveGroupAction() {

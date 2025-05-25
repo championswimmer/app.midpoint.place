@@ -17,6 +17,7 @@ declare module 'vue' {
     BFormText: typeof import('bootstrap-vue-next/components/BForm')['BFormText']
     ErrorToast: typeof import('./src/components/ErrorToast.vue')['default']
     GroupCard: typeof import('./src/components/GroupCard.vue')['default']
+    JoinGroupModal: typeof import('./src/components/JoinGroupModal.vue')['default']
     LocationPickerMap: typeof import('./src/components/LocationPickerMap.vue')['default']
     MapView: typeof import('./src/components/MapView.vue')['default']
     MemberCard: typeof import('./src/components/MemberCard.vue')['default']
