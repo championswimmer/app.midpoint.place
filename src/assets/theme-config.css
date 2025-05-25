@@ -16,6 +16,12 @@
   --bs-secondary-rgb: 232, 148, 40 !important;
   --bs-secondary-rgb-dark: 169, 116, 40 !important;
   --bs-secondary-rgb-light: 240, 179, 40 !important;
+
+  /* Place Colors */
+  --bs-place-bar-rgb: #4d94c7;
+  --bs-place-restaurant-rgb: #d1596f;
+  --bs-place-cafe-rgb: #c89148;
+  --bs-place-park-rgb: #66bb6a;
 }
 
 /* Examples of other colors you might want to use:

@@ -72,22 +72,22 @@ const titleClass = computed(() => {
 }
 
 .title-bar {
-  color: #4d94c7;
+  color: var(--bs-place-bar-rgb);
   /* darker pastel blue */
 }
 
 .title-restaurant {
-  color: #d1596f;
+  color: var(--bs-place-restaurant-rgb);
   /* darker pastel red */
 }
 
 .title-cafe {
-  color: #c89148;
+  color: var(--bs-place-cafe-rgb);
   /* darker pastel light brown (tan) */
 }
 
 .title-park {
-  color: #66BB6A;
+  color: var(--bs-place-park-rgb);
   /* darker pastel green */
 }
 </style>
