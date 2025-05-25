@@ -1,6 +1,5 @@
 <template>
-  <BModal v-model="isModalOpen" title="Confirm Your Location to Join Group" size="lg" hide-footer
-    @hidden="onModalHidden">
+  <BModal v-model="isModalOpen" title="Confirm Your Location to Join Group" size="lg" no-footer @hidden="onModalHidden">
     <div class="modal-body-content">
       <p>Please confirm the location from where you will be travelling to join the group.</p>
 
