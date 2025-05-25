@@ -6,6 +6,7 @@
 import { ref, onMounted, onUnmounted, watch, shallowRef } from 'vue';
 import { loadGoogleMapsScript } from '@/services/mapService';
 import type { UserLocation } from '@/services/apiService';
+import type { GroupPlaceResponse, PlaceType } from '@/services/apiService';
 
 // SVG imports for markers
 import mapPinDefaultSvg from '@/assets/map-pin.svg?raw';
@@ -21,8 +22,14 @@ interface MapItem {
   name?: string; // Optional name for info window or tooltip
 }
 
-interface PlaceItem extends MapItem {
-  type: 'cafe' | 'bar' | 'restaurant' | 'park' | string; // Add more specific types as needed
+// Interface for place items, extending relevant fields from GroupPlaceResponse
+// and ensuring compatibility with MapItem structure.
+interface PlaceItem extends Omit<GroupPlaceResponse, 'group_id' | 'latitude' | 'longitude' | 'type'> {
+  // id is inherited from GroupPlaceResponse (string) and satisfies MapItem's id (string | number).
+  // name is inherited from GroupPlaceResponse (string) and satisfies MapItem's optional name (string).
+  location: UserLocation; // Explicitly define to match MapItem and provide clear structure.
+  type: PlaceType; // Explicitly define type to use the imported PlaceType and satisfy linter.
+  // Other fields like address, map_uri, place_id, rating are inherited from GroupPlaceResponse.
 }
 
 interface UserItem extends MapItem {
@@ -42,6 +49,7 @@ const emit = defineEmits<{
 const mapContainer = ref<HTMLElement | null>(null);
 const map = shallowRef<google.maps.Map | null>(null);
 const markers = shallowRef<google.maps.Marker[]>([]);
+const openInfoWindow = shallowRef<google.maps.InfoWindow | null>(null);
 
 const DEFAULT_ZOOM = 14;
 
@@ -60,7 +68,8 @@ const getIconForPlace = (type: string): string => {
 const createMarker = (
   position: UserLocation,
   iconSvg: string,
-  title?: string
+  title?: string,
+  infoWindowContent?: string
 ): google.maps.Marker | null => {
   if (!map.value) return null;
 
@@ -70,15 +79,35 @@ const createMarker = (
     anchor: new google.maps.Point(18, 36), // Adjust anchor based on icon shape (bottom center)
   };
 
-  return new google.maps.Marker({
+  const marker = new google.maps.Marker({
     position: { lat: position.latitude, lng: position.longitude },
     map: map.value,
     icon: icon,
     title: title,
   });
+
+  if (infoWindowContent && map.value) {
+    const infoWindow = new google.maps.InfoWindow({
+      content: infoWindowContent,
+    });
+
+    marker.addListener('click', () => {
+      if (openInfoWindow.value) {
+        openInfoWindow.value.close();
+      }
+      infoWindow.open(map.value, marker);
+      openInfoWindow.value = infoWindow;
+    });
+  }
+
+  return marker;
 };
 
 const clearMarkers = () => {
+  if (openInfoWindow.value) {
+    openInfoWindow.value.close();
+    openInfoWindow.value = null;
+  }
   markers.value.forEach(marker => marker.setMap(null));
   markers.value = [];
 };
@@ -100,8 +129,20 @@ const updateMarkers = () => {
   // Place markers
   props.places.forEach(place => {
     if (place.location) {
-      const iconSvg = getIconForPlace(place.type);
-      const marker = createMarker(place.location, iconSvg, place.name);
+      const iconSvg = getIconForPlace(place.type as string);
+      let infoContent = `<h5>${place.name}</h5>`;
+      // infoContent += `<br>(${place.type})`;
+      infoContent += `<br><b>Address:</b> ${place.address}`;
+      if (place.rating) {
+        infoContent += `<br> ⭐ ${place.rating} / 5`;
+      }
+      if (place.map_uri) {
+        infoContent += `<br><a href="${place.map_uri}" target="_blank">Open in Google Maps</a>`;
+      }
+      // Add other details from GroupPlaceResponse as needed
+      // e.g. place.place_id etc.
+
+      const marker = createMarker(place.location, iconSvg, place.name, infoContent);
       if (marker) newMarkers.push(marker);
     }
   });
@@ -157,6 +198,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearMarkers();
+  if (openInfoWindow.value) {
+    openInfoWindow.value.close();
+    openInfoWindow.value = null;
+  }
   // Potentially more cleanup if map listeners were added
 });
 

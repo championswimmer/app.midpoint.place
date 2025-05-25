@@ -265,3 +265,4 @@ export default apiService;
 // UserResponse, CreateUserRequest, LoginUserRequest, GroupResponse are already exported.
 // UserLocation and User are newly aliased and exported types.
 export type { GroupUserJoinRequest };
+export { PlaceType };

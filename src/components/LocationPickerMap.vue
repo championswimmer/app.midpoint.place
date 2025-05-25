@@ -18,9 +18,7 @@ const emit = defineEmits<{
 }>()
 
 const mapContainer = ref<HTMLElement | null>(null)
-// @ts-expect-error google is a global variable from Google Maps script
 const map = ref<google.maps.Map | null>(null)
-// @ts-expect-error google is a global variable from Google Maps script
 let mapIdleListener: google.maps.MapsEventListener | null = null
 
 const DEFAULT_ZOOM = 8
@@ -49,14 +47,12 @@ defineExpose({
 const loadMap = async () => {
   try {
     await loadGoogleMapsScript()
-    // @ts-expect-error google is a global variable from Google Maps script
     if (mapContainer.value && window.google && window.google.maps) {
       const initialCenter = props.initialLocation
         ? { lat: props.initialLocation.latitude, lng: props.initialLocation.longitude }
         : { lat: 37.0902, lng: -95.7129 } // Default to center of US
       const initialZoom = props.initialLocation ? BROWSER_LOC_ZOOM : DEFAULT_ZOOM
 
-      // @ts-expect-error google is a global variable from Google Maps script
       map.value = new window.google.maps.Map(mapContainer.value, {
         center: initialCenter,
         zoom: initialZoom,
@@ -77,7 +73,6 @@ const loadMap = async () => {
       centerPin.style.pointerEvents = 'none'; // So it doesn't interfere with map events
       mapContainer.value.appendChild(centerPin);
 
-
       mapIdleListener = map.value.addListener('idle', () => {
         const center = map.value?.getCenter()
         if (center) {
@@ -90,7 +85,6 @@ const loadMap = async () => {
       if (currentMapCenter) {
         emit('update:location', { latitude: currentMapCenter.lat(), longitude: currentMapCenter.lng() })
       }
-
     }
   } catch (error) {
     console.error('Failed to load Google Maps:', error)
