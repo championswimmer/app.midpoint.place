@@ -131,7 +131,14 @@ const loadMap = async () => {
         streetViewControl: false,
         zoomControl: true,
         scrollwheel: true,
-      });
+        styles: [
+          {
+            featureType: 'poi.business',
+            stylers: [{ visibility: 'off' }],
+          },
+        ],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any); // Cast the entire options object to any
 
       updateMarkers(); // Initial marker placement
 
