@@ -1,13 +1,13 @@
 <template>
   <div class="container mt-4" v-if="group">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-8 col-lg-5">
         <h1 class="text-primary fw-bolder">{{ group.name }}</h1>
         <p class="text-muted">Group Code: <span class="font-monospace">{{ group.code }}</span></p>
         <p>
           <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
             group.creator.username
-          }}</strong>
+            }}</strong>
         </p>
         <p>
           <Users :size="18" class="me-1 align-text-bottom" /> Members: {{ groupMemberCount }}
@@ -20,11 +20,13 @@
           <CircleDot :size="18" class="me-1 align-text-bottom" /> Radius: {{ (group.radius / 1000).toFixed(1) }} km
         </p>
       </div>
-      <div class="col-md-4">
-        <MultiItemMap v-if="group && mapMidpoint" :users="mapUsers" :places="mapPlaces" :midpoint="mapMidpoint"
-          @map-load-error="handleMapError" />
-        <div v-else class="card">
-          <div class="card-body text-center">
+      <div class="col-md-4 col-lg-7">
+        <div v-if="group && mapMidpoint" class="ratio ratio-16x9">
+          <MultiItemMap :users="mapUsers" :places="mapPlaces" :midpoint="mapMidpoint" @map-load-error="handleMapError"
+            style="position: absolute; top:0; left:0; width:100%; height:100%;" />
+        </div>
+        <div v-else class="card ratio ratio-16x9">
+          <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
             <p class="card-text">Map loading or not available...</p>
           </div>
         </div>
