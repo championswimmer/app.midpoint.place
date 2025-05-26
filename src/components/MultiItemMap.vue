@@ -14,6 +14,7 @@ import mapPinCafeSvg from '@/assets/map-pin-cafe.svg?raw';
 import mapPinBarSvg from '@/assets/map-pin-bar.svg?raw';
 import mapPinRestaurantSvg from '@/assets/map-pin-restaurant.svg?raw';
 import mapPinParkSvg from '@/assets/map-pin-park.svg?raw';
+import mapMidpointSvg from '@/assets/map-midpoint.svg?raw';
 
 // Define interfaces for props
 interface MapItem {
@@ -76,7 +77,7 @@ const createMarker = (
   const icon = {
     url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(iconSvg)}`,
     scaledSize: new google.maps.Size(36, 36), // Adjust size as needed
-    anchor: new google.maps.Point(18, 36), // Adjust anchor based on icon shape (bottom center)
+    anchor: title === "Midpoint" ? new google.maps.Point(18, 18) : new google.maps.Point(18, 36), // Adjust anchor based on icon shape (bottom center)
   };
 
   const marker = new google.maps.Marker({
@@ -149,7 +150,7 @@ const updateMarkers = () => {
 
   // Midpoint marker
   if (props.midpoint) {
-    const marker = createMarker(props.midpoint, mapPinDefaultSvg, 'Midpoint');
+    const marker = createMarker(props.midpoint, mapMidpointSvg, 'Midpoint');
     if (marker) newMarkers.push(marker);
   }
 

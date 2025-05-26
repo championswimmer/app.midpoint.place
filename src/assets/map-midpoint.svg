@@ -1,0 +1,19 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Map Midpoint Icon</title>
+
+  <!-- Crosshair Lines - Purple -->
+  <line x1="3" y1="18" x2="7.5" y2="18" stroke="#704799" stroke-width="3" stroke-linecap="round"
+    stroke-linejoin="round" /> <!-- Left segment -->
+  <line x1="28.5" y1="18" x2="33" y2="18" stroke="#704799" stroke-width="3" stroke-linecap="round"
+    stroke-linejoin="round" /> <!-- Right segment -->
+  <line x1="18" y1="3" x2="18" y2="7.5" stroke="#704799" stroke-width="3" stroke-linecap="round"
+    stroke-linejoin="round" /> <!-- Top segment -->
+  <line x1="18" y1="28.5" x2="18" y2="33" stroke="#704799" stroke-width="3" stroke-linecap="round"
+    stroke-linejoin="round" /> <!-- Bottom segment -->
+
+  <!-- Concentric Circles -->
+  <!-- Outer circle: purple stroke, orange fill -->
+  <circle cx="18" cy="18" r="10.5" fill="#E89428" stroke="#704799" stroke-width="3" />
+  <!-- Inner circle: purple stroke, orange fill (drawn on top of outer circle's fill) -->
+  <circle cx="18" cy="18" r="4.5" fill="#E89428" stroke="#704799" stroke-width="3" />
+</svg>
