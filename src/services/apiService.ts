@@ -38,7 +38,7 @@ export interface CreateGroupRequest {
 
 interface GroupCreator {
   id: number;
-  username: string;
+  display_name: string;
 }
 
 export interface GroupPlaceResponse {
@@ -60,7 +60,7 @@ export interface GroupUserResponse {
   longitude: number;
   role: GroupUserRole;
   user_id: number;
-  username: string;
+  display_name: string;
 }
 
 export interface GroupResponse {
@@ -91,7 +91,8 @@ interface GroupUserJoinRequest {
 
 // User DTOs
 export interface CreateUserRequest {
-  username?: string;
+  email: string;
+  display_name: string;
   password?: string;
 }
 
@@ -103,7 +104,7 @@ interface Location {
 export type UserLocation = Location;
 
 export interface LoginUserRequest {
-  username?: string;
+  email?: string;
   password?: string;
 }
 
@@ -111,7 +112,8 @@ export interface UserResponse {
   id: number;
   location?: Location;
   token?: string;
-  username?: string;
+  email?: string;
+  display_name?: string;
 }
 
 export type User = UserResponse;

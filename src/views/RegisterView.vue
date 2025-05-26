@@ -3,8 +3,12 @@
     <h1>Register</h1>
     <form @submit.prevent="handleRegister">
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" v-model="username" required>
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" v-model="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="displayName" class="form-label">Display Name</label>
+        <input type="text" class="form-control" id="displayName" v-model="displayName" required>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -29,12 +33,13 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
-const username = ref('');
+const email = ref('');
+const displayName = ref('');
 const password = ref('');
 const auth = useAuthStore();
 
 const handleRegister = async () => {
-  await auth.register({ username: username.value, password: password.value });
+  await auth.register({ email: email.value, display_name: displayName.value, password: password.value });
 };
 </script>
 

@@ -6,7 +6,7 @@
         <p class="text-muted">Group Code: <span class="font-monospace">{{ group.code }}</span></p>
         <p>
           <User :size="18" class="me-1 align-text-bottom" /> Created by: <strong class="text-secondary fw-medium">{{
-            group.creator.username
+            group.creator.display_name
           }}</strong>
         </p>
         <p>
@@ -122,8 +122,8 @@ const mapUsers = computed(() => {
   return group.value.members.map(member => ({
     id: member.user_id,
     location: { latitude: member.latitude, longitude: member.longitude }, // Use direct lat/lng
-    username: member.username,
-    name: member.username, // for MapItem compatibility
+    username: member.display_name,
+    name: member.display_name, // for MapItem compatibility
   }));
 });
 

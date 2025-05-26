@@ -49,7 +49,7 @@ const openLocationModal = () => {
           <BNavItem v-if="currentUser">
             <span class="nav-link d-flex align-items-center">
               <User class="me-1" :size="18" />
-              {{ currentUser.username }}
+              {{ currentUser.display_name }}
             </span>
           </BNavItem>
           <BNavItem>

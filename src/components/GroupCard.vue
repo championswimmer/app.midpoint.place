@@ -30,7 +30,7 @@ const groupTypeIcon = (type: string) => {
           Code: <span class="font-monospace">{{ group.code }}</span>
         </h6>
         <p class="card-text">
-          <User :size="16" class="me-1" /> Creator: {{ group.creator.username }}
+          <User :size="16" class="me-1" /> Creator: {{ group.creator.display_name }}
         </p>
         <p class="card-text">
           <Users :size="16" class="me-1" /> Members: {{ group.member_count ?? 0 }}
