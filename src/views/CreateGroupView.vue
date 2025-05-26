@@ -35,7 +35,7 @@
       <BFormGroup v-if="type === GroupType.Private" id="secret-group" label="Secret:" label-for="secret"
         description="A 6-digit secret required to join this private group." class="mb-3">
         <BFormInput id="secret" v-model="secret" type="text" :state="secretState" placeholder="Enter 6-digit secret"
-          pattern="\\d{6}" maxlength="6"></BFormInput>
+          pattern="\d{6}" maxlength="6"></BFormInput>
         <BFormInvalidFeedback :state="secretState">
           Secret must be exactly 6 digits.
         </BFormInvalidFeedback>
