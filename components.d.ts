@@ -23,5 +23,6 @@ declare module 'vue' {
     PlaceCard: typeof import('./src/components/PlaceCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ShareGroupModal: typeof import('./src/components/ShareGroupModal.vue')['default']
   }
 }

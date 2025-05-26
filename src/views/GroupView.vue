@@ -47,6 +47,10 @@
         <UserMinusIcon v-else :size="18" class="me-1 align-middle" />
         Leave Group
       </BButton>
+      <BButton variant="outline-info" @click="openShareModal" :disabled="!group">
+        <Share2Icon :size="18" class="me-1 align-middle" />
+        Share Group
+      </BButton>
     </div>
 
     <!-- Tabs for Members and Places -->
@@ -77,6 +81,9 @@
     <JoinGroupModal :is-visible="isJoinGroupModalVisible" :group-code="groupCode"
       @update:is-visible="isJoinGroupModalVisible = $event" @join-successful="handleJoinSuccess" />
 
+    <ShareGroupModal :is-visible="isShareGroupModalVisible" :group-code="groupCode"
+      @update:is-visible="isShareGroupModalVisible = $event" />
+
   </div>
   <div v-else-if="isLoading" class="container mt-4 text-center">
     <div class="spinner-border text-primary" role="status">
@@ -97,10 +104,11 @@ import apiService, { type GroupResponse } from '@/services/apiService';
 import { useErrorStore } from '@/stores/error';
 import { useAuthStore } from '@/stores/auth';
 import { BButton, BTabs, BTab } from 'bootstrap-vue-next';
-import { User, Users, Lock, Unlock, EyeOff, CircleDot, UserPlusIcon, UserMinusIcon } from 'lucide-vue-next';
+import { User, Users, Lock, Unlock, EyeOff, CircleDot, UserPlusIcon, UserMinusIcon, Share2Icon } from 'lucide-vue-next';
 import MemberCard from '@/components/MemberCard.vue';
 import PlaceCard from '@/components/PlaceCard.vue';
 import JoinGroupModal from '@/components/JoinGroupModal.vue';
+import ShareGroupModal from '@/components/ShareGroupModal.vue';
 import MultiItemMap from '@/components/MultiItemMap.vue';
 
 const route = useRoute();
@@ -113,6 +121,7 @@ const isUpdatingMembership = ref(false);
 const error = ref<string | null>(null);
 const activeTab = ref(0); // 0 for Members, 1 for Places
 const isJoinGroupModalVisible = ref(false); // Added for modal visibility
+const isShareGroupModalVisible = ref(false); // Added for share modal visibility
 const mapError = ref<string | null>(null);
 
 const groupCode = computed(() => route.params.groupcode as string);
@@ -255,6 +264,10 @@ async function joinGroupAction() {
   }
   isJoinGroupModalVisible.value = true; // Open the modal
 }
+
+const openShareModal = () => {
+  isShareGroupModalVisible.value = true;
+};
 
 async function handleJoinSuccess() {
   isJoinGroupModalVisible.value = false; // Close modal on success

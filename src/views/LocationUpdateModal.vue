@@ -1,5 +1,5 @@
 <template>
-  <BModal v-model="isModalVisible" title="Update Your Location" size="lg" hide-footer @hidden="onModalHidden">
+  <BModal v-model="isModalVisible" title="Update Your Location" size="lg" no-footer @hidden="onModalHidden">
     <div class="modal-body-content">
       <p>Please select your location on the map.</p>
 
