@@ -38,7 +38,13 @@ export const useAuthStore = defineStore('auth', {
           // Fetch full user details if login response is partial or to ensure consistency
           // For now, we assume loginUser returns sufficient UserResponse
           // If not, an additional call to a getUserById endpoint would be needed here.
-          router.push('/'); // Redirect to home or dashboard after login
+          const redirectPath = localStorage.getItem('redirectPath');
+          if (redirectPath) {
+            localStorage.removeItem('redirectPath');
+            router.push(redirectPath);
+          } else {
+            router.push('/'); // Redirect to home or dashboard after login
+          }
         } else {
           throw new Error('Login failed: No token or user ID received.');
         }

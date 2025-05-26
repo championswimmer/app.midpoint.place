@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import CreateGroupView from '../views/CreateGroupView.vue'
-import GroupView from '../views/GroupView.vue'
 import { usePostHog } from '../services/posthog'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,26 +20,18 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      component: RegisterView,
+      component: () => import('../views/RegisterView.vue'),
     },
     {
       path: '/create_group',
       name: 'create_group',
-      component: CreateGroupView,
+      component: () => import('../views/CreateGroupView.vue'),
     },
     {
       path: '/groups/:groupcode',
       name: 'group-view',
-      component: GroupView,
+      component: () => import('../views/GroupView.vue'),
       props: true
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
     },
   ],
 })
@@ -49,6 +39,26 @@ const router = createRouter({
 const { posthog } = usePostHog()
 
 router.beforeEach((to, from) => {
+  const authStore = useAuthStore()
+  const publicPages = ['/login', '/register']
+  const authRequired = !publicPages.includes(to.path)
+
+  // Attempt to initialize auth state, e.g. load from localStorage
+  // This is important if the page is refreshed or app is loaded for the first time
+  if (!authStore.isAuthenticated && authStore.token) {
+    authStore.fetchUser() // This action should ideally populate `user` and update `isAuthenticated`
+  }
+
+
+  if (authRequired && !authStore.isAuthenticated) {
+    // Store the original path to redirect back after login
+    // Avoid storing if it's already a redirect from login or register
+    if (to.name !== 'login' && to.name !== 'register') {
+      localStorage.setItem('redirectPath', to.fullPath);
+    }
+    return { name: 'login' }
+  }
+
   if (to.path !== from.path) {
     posthog.capture('$pageleave')
   }
