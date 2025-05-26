@@ -47,7 +47,7 @@
         <UserMinusIcon v-else :size="18" class="me-1 align-middle" />
         Leave Group
       </BButton>
-      <BButton variant="outline-info" @click="openShareModal" :disabled="!group">
+      <BButton variant="outline-secondary" @click="openShareModal" :disabled="!group">
         <Share2Icon :size="18" class="me-1 align-middle" />
         Share Group
       </BButton>
@@ -329,5 +329,9 @@ onMounted(async () => {
 <style scoped>
 .container {
   max-width: 960px;
+}
+
+.btn:disabled {
+  opacity: 0.4;
 }
 </style>
