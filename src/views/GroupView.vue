@@ -136,15 +136,20 @@ const mapPlaces = computed(() => {
 });
 
 const mapMidpoint = computed(() => {
-  // Removed direct check for group.center_latitude/longitude as it's not in GroupResponse
-  // Fallback logic if group center is not defined
+  if (group.value?.midpoint_latitude && group.value?.midpoint_longitude) {
+    return { latitude: group.value.midpoint_latitude, longitude: group.value.midpoint_longitude };
+  }
+  // fallback to first place or user location
   if (mapPlaces.value.length > 0 && mapPlaces.value[0].location) {
     return mapPlaces.value[0].location;
   }
   if (mapUsers.value.length > 0 && mapUsers.value[0].location) {
     return mapUsers.value[0].location;
   }
-  return { latitude: 37.0902, longitude: -95.7129 }; // Default to center of US
+  if (authStore.currentUser?.location) {
+    return authStore.currentUser.location;
+  }
+  return { latitude: 51.5074, longitude: -0.1278 }; // Default to center of London
 });
 
 const sortedPlaces = computed(() => {
