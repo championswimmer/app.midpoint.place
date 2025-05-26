@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { BNavbar, BNavbarBrand, BNavbarNav, BNavItem, BCollapse, BNavbarToggle } from 'bootstrap-vue-next'
-import { LocateFixed, MapPinned, LogIn, UserPlus, User, LogOut, MapPin } from 'lucide-vue-next'
+import { LocateFixed, MapPinned, LogIn, UserPlus, User, LogOut, MapPin, PanelTopOpen, PanelTopClose } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth' // Import the auth store
 import { useLocationStore } from '@/stores/locationStore' // Import location store
 import { storeToRefs } from 'pinia' // Import storeToRefs for reactive access to getters
@@ -29,7 +29,12 @@ const openLocationModal = () => {
       <MapPinned class="ms-2 text-secondary" />
     </BNavbarBrand>
 
-    <BNavbarToggle target="nav-collapse" />
+    <BNavbarToggle target="nav-collapse">
+      <template #default="{ expanded }">
+        <PanelTopClose v-if="expanded" />
+        <PanelTopOpen v-else />
+      </template>
+    </BNavbarToggle>
 
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav class="ms-auto">
