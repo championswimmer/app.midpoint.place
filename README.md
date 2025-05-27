@@ -1,5 +1,7 @@
 # app.midpoint.place
 
+> NOTE: Backend API docs are available on <https://api.midpoint.place/docs> 
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
